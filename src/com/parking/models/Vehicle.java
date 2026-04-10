@@ -1,0 +1,11 @@
+/**
+ * 
+ */
+package com.parking.models;
+
+/**
+ * 
+ */
+public class Vehicle {
+	
+}
