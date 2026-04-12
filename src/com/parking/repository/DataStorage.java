@@ -5,6 +5,7 @@ package com.parking.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 
 import com.parking.models.ParkingArea;
 import com.parking.models.ParkingSlot;
@@ -51,6 +52,9 @@ public class DataStorage {
 		listUsers.add(new User("Nam", "123", "Nguyen Van Nam", UserRole.ADMIN));
 		listUsers.add(new User("Minh", "123", "Nguyen Van Minh", UserRole.STAFF));
 		
+		// Khoi tao cac the thang mau (Neu can)
+		listCards.add(new SubscriptionCard("C-001", "ABC-123", "Khách Hàng A", VehicleType.CAR, LocalDate.now().plusMonths(1))); // Thẻ còn hạn 1 tháng
+		listCards.add(new SubscriptionCard("C-002", "DEF-456", "Khách Hàng B", VehicleType.CAR, LocalDate.now().minusDays(5)));  // Thẻ đã hết hạn 5 ngày trước
 		// Khoi tao cac khu vuc do xe
 		listAreas.add(new ParkingArea("A", "Khu A", VehicleType.CAR));
 		// listAreas.add(new ParkingArea("B", "Khu B", VehicleType.MOTORBIKE)); // Có thể thêm khu B, C nếu hệ thống có VehicleType tương ứng
@@ -61,6 +65,7 @@ public class DataStorage {
 		for (int i = 1; i < 10; i++) {
 			listSlots.add(new ParkingSlot("A-"+ i, VehicleType.CAR, false));
 		}
+		
 	}
 	public List<User> getListUsers() {
 		return listUsers;

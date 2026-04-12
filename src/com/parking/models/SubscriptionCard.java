@@ -30,12 +30,14 @@ public class SubscriptionCard {
 		this.vehicleType = vehicleType;
 		this.expiryDate = expiryDate;
 	}
+
 	/**
 	 * Kiem tra con han doi voi the thang khong
 	 * 
 	 * @return
 	 */
 	public boolean isValid() {
+		if (expiryDate == null) return false;
 		return LocalDate.now().isBefore(expiryDate)	|| LocalDate.now().isEqual(expiryDate);
 	}
 	
