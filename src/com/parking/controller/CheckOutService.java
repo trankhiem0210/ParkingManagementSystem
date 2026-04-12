@@ -3,11 +3,11 @@
  */
 package com.parking.controller;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 import com.parking.models.ParkingSlot;
 import com.parking.models.ParkingTicket;
+import com.parking.models.PricingPolicy;
 import com.parking.repository.DataStorage;
 
 /**
@@ -15,6 +15,7 @@ import com.parking.repository.DataStorage;
  */
 public class CheckOutService {
 	private DataStorage storage = DataStorage.getInstance();
+	private PricingPolicy pricingPolicy = new PricingPolicy(); // Có thể inject tuỳ biến biểu phí
 	
 	// Xu ly check-out dua tren ma vi tri do va ma ve xe
 	public String performCheckOut(String slotId, String ticketId) {
@@ -46,15 +47,7 @@ public class CheckOutService {
 
 		// Tinh toan thoi gian va chi phi
 		ticket.setExitTime(LocalDateTime.now());
-		double totalFee = 0.0;
-		
-		if (!hasValidSubscription) {
-			long hours = Duration.between(ticket.getEntryTime(), ticket.getExitTime()).toHours();
-			if (hours == 0) {
-				hours = 1; // Thu phi it nhat la 1 gio cho khach le
-			}
-			totalFee = hours * 10000.0; // Gia su 10.000 VND / 1 gio
-		}
+		double totalFee = pricingPolicy.calculateFee(ticket.getEntryTime(), ticket.getExitTime(), hasValidSubscription);
 		
 		ticket.setTotalFee(totalFee);
 		ticket.setCheckOut(true);

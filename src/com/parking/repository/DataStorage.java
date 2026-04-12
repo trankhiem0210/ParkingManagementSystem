@@ -6,6 +6,7 @@ package com.parking.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.parking.models.ParkingArea;
 import com.parking.models.ParkingSlot;
 import com.parking.models.ParkingTicket;
 import com.parking.models.SubscriptionCard;
@@ -24,6 +25,7 @@ public class DataStorage {
 	private List<SubscriptionCard> listCards;
 	private List<ParkingTicket> listTickets;	//Xe dang o trong bai
 	private List<ParkingTicket> listHistoryTickets;	//Xe da check-out
+	private List<ParkingArea> listAreas;
 	
 	private DataStorage() {
 		listUsers = new ArrayList<User>();
@@ -31,6 +33,7 @@ public class DataStorage {
 		listCards = new ArrayList<SubscriptionCard>();
 		listTickets = new ArrayList<ParkingTicket>();
 		listHistoryTickets = new ArrayList<ParkingTicket>();
+		listAreas = new ArrayList<ParkingArea>();
 		
 		//
 		initDefaultData();
@@ -47,6 +50,10 @@ public class DataStorage {
 		//Them tai khoan admin va nhan vien mau
 		listUsers.add(new User("Nam", "123", "Nguyen Van Nam", UserRole.ADMIN));
 		listUsers.add(new User("Minh", "123", "Nguyen Van Minh", UserRole.STAFF));
+		
+		// Khoi tao cac khu vuc do xe
+		listAreas.add(new ParkingArea("A", "Khu A", VehicleType.CAR));
+		// listAreas.add(new ParkingArea("B", "Khu B", VehicleType.MOTORBIKE)); // Có thể thêm khu B, C nếu hệ thống có VehicleType tương ứng
 		/**
 		 * Khoi tao vi tri do
 		 * VD: 10 slots cho khu A
@@ -70,5 +77,7 @@ public class DataStorage {
 	public List<ParkingTicket> getListHistoryTickets() {
 		return listHistoryTickets;
 	}
-	
+	public List<ParkingArea> getListAreas() {
+		return listAreas;
+	}
 }
