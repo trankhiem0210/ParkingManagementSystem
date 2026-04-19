@@ -3,7 +3,6 @@
  */
 package com.parking.models;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**

@@ -1,0 +1,132 @@
+@startuml
+title Class Diagram - Parking Management System
+
+package "com.parking.models" {
+    enum VehicleType {
+        CAR
+        MOTORBIKE
+    }
+
+    enum UserRole {
+        ADMIN
+        STAFF
+    }
+
+    class User {
+        - String username
+        - String password
+        - String fullName
+        - UserRole role
+        + User(username, password, fullName, role)
+    }
+
+    class ParkingArea {
+        - String areaId
+        - String areaName
+        - VehicleType vehicleType
+        + ParkingArea(areaId, areaName, vehicleType)
+        + getAreaId(): String
+        + getAreaName(): String
+        + getVehicleType(): VehicleType
+    }
+
+    class ParkingSlot {
+        - String slotId
+        - VehicleType areaType
+        - boolean isOccupied
+        + ParkingSlot(slotId, areaType, isOccupied)
+        + getSlotId(): String
+        + getAreaType(): VehicleType
+        + isOccupied(): boolean
+        + setOccupied(isOccupied: boolean)
+    }
+
+    class PricingPolicy {
+        - double hourlyRate
+        + PricingPolicy()
+        + PricingPolicy(hourlyRate: double)
+        + calculateFee(entryTime, exitTime, hasValidSubscription): double
+    }
+
+    class ParkingTicket {
+        - String ticketId
+        - String plateNumber
+        - VehicleType type
+        - LocalDateTime entryTime
+        - LocalDateTime exitTime
+        - double totalFee
+        - boolean isCheckOut
+    }
+
+    class SubscriptionCard {
+        - String cardId
+        - String plateNumber
+        - String ownerName
+        - VehicleType vehicleType
+        - LocalDate expirationDate
+        + isValid(): boolean
+    }
+}
+
+package "com.parking.repository" {
+    class DataStorage {
+        - static DataStorage instance
+        - List<User> listUsers
+        - List<ParkingSlot> listSlots
+        - List<SubscriptionCard> listCards
+        - List<ParkingTicket> listTickets
+        - List<ParkingTicket> listHistoryTickets
+        - List<ParkingArea> listAreas
+        - DataStorage()
+        + static getInstance(): DataStorage
+        - initDefaultData()
+        + getListUsers()
+        + getListSlots()
+        + getListCards()
+        + getListTickets()
+        + getListHistoryTickets()
+        + getListAreas()
+    }
+
+    class FileHandler {
+    }
+}
+
+package "com.parking.controller" {
+    class CheckInService {
+        - DataStorage storage
+        + performCheckIn(plate, type, idCard): String
+    }
+
+    class CheckOutService {
+        - DataStorage storage
+        - PricingPolicy pricingPolicy
+        + performCheckOut(slotId, ticketId): String
+    }
+
+    class SubscriptionService {
+        - DataStorage storage
+        + registerSubscriptionCard(newCard): String
+    }
+}
+
+package "com.parking.view" {
+    class MainFrame {
+        + MainFrame()
+        - initComponents()
+        + {static} main(args)
+    }
+}
+
+' Relationships
+DataStorage "1" o-- "*" User
+DataStorage "1" o-- "*" ParkingSlot
+DataStorage "1" o-- "*" SubscriptionCard
+DataStorage "1" o-- "*" ParkingTicket
+DataStorage "1" o-- "*" ParkingArea
+
+CheckInService --> DataStorage : uses >
+CheckOutService --> DataStorage : uses >
+CheckOutService --> PricingPolicy : uses >
+SubscriptionService --> DataStorage : uses >
+@enduml

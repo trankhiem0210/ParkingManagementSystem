@@ -1,0 +1,38 @@
+@startuml
+title Use Case Diagram - Parking Management System
+
+left to right direction
+skinparam packageStyle rectangle
+
+' Khai báo các Actors
+actor "Nhân viên\n(Staff)" as Staff
+actor "Quản trị viên\n(Admin)" as Admin
+
+' Quản trị viên có toàn bộ quyền của Nhân viên
+Admin -|> Staff
+
+package "Hệ thống Quản lý Bãi đỗ xe" {
+    usecase "Đăng nhập" as UC_Login
+    usecase "Check-In (Ghi nhận xe vào)" as UC_CheckIn
+    usecase "Check-Out (Ghi nhận xe ra)" as UC_CheckOut
+    usecase "Đăng ký/Quản lý vé tháng" as UC_Subscription
+    usecase "Xem báo cáo doanh thu" as UC_Report
+    
+    usecase "Kiểm tra thẻ tháng" as UC_VerifyCard
+    usecase "Tính phí gửi xe" as UC_CalculateFee
+}
+
+' Định nghĩa các mối quan hệ cho Staff
+Staff --> UC_Login
+Staff --> UC_CheckIn
+Staff --> UC_CheckOut
+Staff --> UC_Subscription
+
+' Định nghĩa các mối quan hệ riêng cho Admin
+Admin --> UC_Report
+
+' Các quan hệ Include (Bao gồm)
+UC_CheckIn ..> UC_VerifyCard : <<include>>
+UC_CheckOut ..> UC_CalculateFee : <<include>>
+UC_CalculateFee ..> UC_VerifyCard : <<include>>
+@enduml
