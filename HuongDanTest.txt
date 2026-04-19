@@ -1,0 +1,78 @@
+======================================================
+   HƯỚNG DẪN KIỂM THỬ (TEST) HỆ THỐNG BÃI ĐỖ XE
+======================================================
+
+Hệ thống đã được khởi tạo sẵn một số dữ liệu mặc định:
+- Tài khoản:
+  + Admin: Tên đăng nhập: Nam  | Mật khẩu: 123
+  + Staff: Tên đăng nhập: Minh | Mật khẩu: 123
+- Thẻ tháng (Subscription):
+  + Mã C-001: Biển số ABC-123 (Ô tô) - Còn hạn
+  + Mã C-002: Biển số DEF-456 (Ô tô) - Đã hết hạn
+
+Vui lòng làm theo các kịch bản dưới đây để kiểm tra toàn bộ tính năng:
+
+------------------------------------------------------
+1. Đăng nhập (Login)
+------------------------------------------------------
+- Chạy file MainFrame.java (Hệ thống sẽ mở màn hình Login).
+- Nhập sai mật khẩu: Nhập "Nam" / "111" -> Kết quả: Báo lỗi "Sai tên đăng nhập...".
+- Nhập đúng: Nhập "Nam" / "123" -> Kết quả: Đăng nhập thành công, vào màn hình chính.
+
+------------------------------------------------------
+2. Đăng ký vé tháng (Subscription)
+------------------------------------------------------
+- Chuyển sang Tab "Đăng ký vé tháng".
+- Kịch bản 1 (Tạo thẻ mới):
+  + Biển số: 29A-12345
+  + Tên chủ xe: Nguyễn Văn A
+  + Loại xe: MOTORBIKE
+  + Số tháng: 1
+  -> Bấm "Đăng ký thẻ" -> Thành công, hệ thống cấp mã thẻ (VD: C-003).
+- Kịch bản 2 (Chặn đăng ký trùng):
+  + Nhập lại thông tin y hệt như trên -> Bấm "Đăng ký thẻ".
+  -> Kết quả: Báo lỗi "Biển số xe này đã có thẻ tháng đang còn hiệu lực!".
+
+------------------------------------------------------
+3. Quản lý Check-In (Xe vào bãi)
+------------------------------------------------------
+- Chuyển sang Tab "Quản lý Check-In".
+- Kịch bản 1 (Khách vãng lai):
+  + Biển số: 30A-9999 | Loại xe: CAR
+  -> Bấm Check In -> Thành công. Nhớ lại "Mã vị trí" (VD: A-1) và "Mã vé" (VD: T-123...).
+- Kịch bản 2 (Khách có thẻ tháng C-001 hợp lệ):
+  + Biển số: ABC-123 | Loại xe: CAR | Mã thẻ: C-001
+  -> Bấm Check In -> Thành công. Nhớ lại "Mã vị trí" (VD: A-2) và "Mã vé".
+- Kịch bản 3 (Khách có thẻ tháng C-002 hết hạn):
+  + Biển số: DEF-456 | Loại xe: CAR | Mã thẻ: C-002
+  -> Bấm Check In -> Kết quả: Báo lỗi "Thẻ tháng không hợp lệ".
+
+------------------------------------------------------
+4. Trạng thái bãi xe & Tìm kiếm (Tra cứu)
+------------------------------------------------------
+- Tab "Trạng thái bãi xe":
+  + Bấm nút "Làm mới trạng thái".
+  -> Bảng sẽ cập nhật dòng CAR: Đang sử dụng 2 chỗ (do vừa check-in 2 chiếc).
+- Tab "Tra cứu/Tìm kiếm":
+  + Nhập biển số "30A" hoặc mã vé "T-..." -> Bấm Tìm kiếm.
+  -> Hệ thống báo "[ĐANG ĐỖ] Biển số: 30A-9999...".
+
+------------------------------------------------------
+5. Quản lý Check-Out (Xe ra bãi)
+------------------------------------------------------
+- Chuyển sang Tab "Quản lý Check-Out".
+- Kịch bản 1 (Khách vãng lai):
+  + Nhập Mã vị trí và Mã vé của xe "30A-9999" (VD: A-1 và T-123...).
+  -> Bấm Check Out -> Thành công. Hệ thống báo tính phí 10,000 VND (do đỗ chưa tới 1 tiếng tính tối thiểu 1 tiếng).
+- Kịch bản 2 (Khách vé tháng):
+  + Nhập Mã vị trí và Mã vé của xe "ABC-123" (VD: A-2 và T-456...).
+  -> Bấm Check Out -> Thành công. Hệ thống báo tính phí 0 VND (do có thẻ tháng).
+
+------------------------------------------------------
+6. Báo cáo Doanh thu
+------------------------------------------------------
+- Chuyển sang Tab "Báo Cáo Doanh Thu".
+- Bấm "Làm mới báo cáo".
+-> Kết quả: Tổng số lượt xe ra là 2. Tổng doanh thu là 10,000 VND.
+
+=== HOÀN TẤT KIỂM THỬ ===

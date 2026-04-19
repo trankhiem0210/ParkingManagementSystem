@@ -1,44 +1,43 @@
-/**
- * 
- */
 package com.parking.controller;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import com.parking.models.SubscriptionCard;
+import com.parking.models.VehicleType;
 import com.parking.repository.DataStorage;
 
-/**
- * 
- */
 public class SubscriptionService {
 	private DataStorage storage = DataStorage.getInstance();
-	
-	// Dang ky ve thang moi
-	public String registerSubscriptionCard(SubscriptionCard newCard) {
-		if (newCard == null || newCard.getCardId() == null || newCard.getCardId().trim().isEmpty()) {
-			return "Thong tin the khong hop le";
+
+	public String registerSubscriptionCard(String plateNumber, String ownerName, VehicleType vehicleType, int months) {
+		if (plateNumber == null || plateNumber.trim().isEmpty()) {
+			return "Biển số xe không được để trống!";
 		}
-		
-		// Kiem tra xem the da ton tai chua (trung Card ID)
-		boolean isCardExist = storage.getListCards().stream()
-				.anyMatch(c -> c.getCardId().equals(newCard.getCardId()));
-				
-		if (isCardExist) {
-			return "Ma the nay da ton tai trong he thong";
+		if (ownerName == null || ownerName.trim().isEmpty()) {
+			return "Tên chủ xe không được để trống!";
 		}
-		
-		// Kiem tra bien so xe da duoc dang ky the thang chua
-		boolean isPlateExist = storage.getListCards().stream()
-				.anyMatch(c -> c.getPlateNumber().equals(newCard.getPlateNumber()));
-				
-		if (isPlateExist) {
-			return "Bien so xe nay da duoc dang ky ve thang truoc do";
+		if (months <= 0) {
+			return "Số tháng đăng ký phải lớn hơn 0!";
 		}
-		
-		// Them the vao he thong luu tru
-		storage.getListCards().add(newCard);
-		return "Dang ky the thang thanh cong cho bien so: " + newCard.getPlateNumber();
+
+		List<SubscriptionCard> cards = storage.getListCards();
+
+		// Kiểm tra xem biển số xe đã có thẻ tháng còn hạn chưa
+		boolean hasActiveCard = cards.stream()
+				.anyMatch(c -> c.getPlateNumber().equalsIgnoreCase(plateNumber) && c.isValid());
+
+		if (hasActiveCard) {
+			return "Biển số xe này đã có thẻ tháng đang còn hiệu lực!";
+		}
+
+		// Tạo mã thẻ mới (Ví dụ: C-00X)
+		String newCardId = String.format("C-%03d", cards.size() + 1);
+		LocalDate expiryDate = LocalDate.now().plusMonths(months);
+
+		SubscriptionCard newCard = new SubscriptionCard(newCardId, plateNumber.toUpperCase(), ownerName, vehicleType, expiryDate);
+		cards.add(newCard);
+
+		return "Đăng ký thành công! Mã thẻ: " + newCardId + " (Hạn: " + expiryDate + ")";
 	}
-	
-	// TODO: Them cac method de cap nhat trang thai the (Gia han the, huy the) 
-	// Vi du: public String renewSubscription(String cardId) { ... }
 }

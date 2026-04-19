@@ -49,10 +49,16 @@ public class MainFrame extends JFrame {
 		CheckInPanel checkInPanel = new CheckInPanel();
 		CheckOutPanel checkOutPanel = new CheckOutPanel();
 		ReportPanel reportPanel = new ReportPanel();
+		SearchPanel searchPanel = new SearchPanel();
+		StatusPanel statusPanel = new StatusPanel();
+		SubscriptionPanel subscriptionPanel = new SubscriptionPanel();
 
 		// Them cac Panel vao Tab
 		tabbedPane.addTab("Quản lý Check-In", checkInPanel);
 		tabbedPane.addTab("Quản lý Check-Out", checkOutPanel);
+		tabbedPane.addTab("Đăng ký vé tháng", subscriptionPanel);
+		tabbedPane.addTab("Tra cứu/Tìm kiếm", searchPanel);
+		tabbedPane.addTab("Trạng thái bãi xe", statusPanel);
 		tabbedPane.addTab("Báo Cáo Doanh Thu", reportPanel);
 
 		// Them JTabbedPane vao vi tri trung tam cua MainFrame

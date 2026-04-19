@@ -17,6 +17,8 @@ package "Hệ thống Quản lý Bãi đỗ xe" {
     usecase "Check-Out (Ghi nhận xe ra)" as UC_CheckOut
     usecase "Đăng ký/Quản lý vé tháng" as UC_Subscription
     usecase "Xem báo cáo doanh thu" as UC_Report
+    usecase "Tra cứu thông tin xe" as UC_Search
+    usecase "Xem trạng thái bãi xe" as UC_ViewStatus
     
     usecase "Kiểm tra thẻ tháng" as UC_VerifyCard
     usecase "Tính phí gửi xe" as UC_CalculateFee
@@ -27,6 +29,8 @@ Staff --> UC_Login
 Staff --> UC_CheckIn
 Staff --> UC_CheckOut
 Staff --> UC_Subscription
+Staff --> UC_Search
+Staff --> UC_ViewStatus
 
 ' Định nghĩa các mối quan hệ riêng cho Admin
 Admin --> UC_Report

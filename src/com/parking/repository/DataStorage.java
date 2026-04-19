@@ -65,7 +65,14 @@ public class DataStorage {
 		for (int i = 1; i < 10; i++) {
 			listSlots.add(new ParkingSlot("A-"+ i, VehicleType.CAR, false));
 		}
-		
+		// Khởi tạo vị trí đỗ cho khu B với 10 slots cho xe máy
+		for (int i = 1; i < 10; i++) {
+			listSlots.add(new ParkingSlot("B-"+ i, VehicleType.MOTORBIKE, false));
+		}
+		// Khởi tạo vị trí đỗ cho khu C với 10 slots cho xe tải
+		for (int i = 1; i < 10; i++) {
+			listSlots.add(new ParkingSlot("C-"+ i, VehicleType.ELECTRIC_BIKE, false));
+		}
 	}
 	public List<User> getListUsers() {
 		return listUsers;
