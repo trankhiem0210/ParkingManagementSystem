@@ -15,6 +15,11 @@
 - **Đăng ký vé tháng (Subscription):**
   - Ghi nhận và đăng ký thẻ tháng mới cho các phương tiện.
   - Kiểm tra và ngăn chặn đăng ký trùng lặp mã thẻ hoặc biển số xe.
+- **Trạng thái bãi xe:**
+  - Hiển thị thời gian thực số lượng chỗ trống, chỗ đang sử dụng cho từng loại xe dưới dạng bảng.
+- **Tra cứu/Tìm kiếm xe:**
+  - Hỗ trợ tìm kiếm thông tin phương tiện (đang đỗ hoặc đã rời bãi) thông qua biển số, mã vé, hoặc mã thẻ tháng.
+  - Hiển thị chi tiết thời gian vào, ra và phí đỗ xe.
 - **Báo cáo doanh thu:**
   - Thống kê tổng số lượt xe đã ra khỏi bãi.
   - Thống kê tổng doanh thu thu được theo thời gian thực.
@@ -27,7 +32,7 @@
 ## Cấu trúc dự án
 Dự án được tổ chức theo kiến trúc phân lớp, tách biệt rõ ràng giữa giao diện, xử lý logic và dữ liệu:
 - `com.parking.models`: Chứa các lớp đại diện cho thực thể trong hệ thống như `User`, `VehicleType`, `ParkingSlot`, `ParkingTicket`, `SubscriptionCard`, `PricingPolicy`,...
-- `com.parking.view`: Chứa các thành phần giao diện người dùng (GUI) như `LoginFrame`, `MainFrame`, `CheckInPanel`, `CheckOutPanel`, `SubscriptionPanel`, `ReportPanel`.
+- `com.parking.view`: Chứa các thành phần giao diện người dùng (GUI) như `LoginFrame`, `MainFrame`, `CheckInPanel`, `CheckOutPanel`, `SubscriptionPanel`, `ReportPanel`, `SearchPanel`, `StatusPanel`.
 - `com.parking.controller`: Chứa các dịch vụ xử lý nghiệp vụ logic như `CheckInService`, `CheckOutService`, `SubscriptionService`.
 - `com.parking.repository`: Chứa các lớp chịu trách nhiệm lưu trữ và truy xuất xuất dữ liệu (ví dụ: `DataStorage`, `FileHandler`).
 
