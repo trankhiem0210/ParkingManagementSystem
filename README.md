@@ -12,6 +12,9 @@
 - **Quản lý Check-Out:**
   - Ghi nhận thông tin xe ra khỏi bãi thông qua mã vị trí đỗ và mã vé xe.
   - Tự động tính toán phí gửi xe dựa trên thời gian đỗ thực tế và chính sách giá (miễn phí đối với vé tháng còn hạn).
+- **Đăng ký vé tháng (Subscription):**
+  - Ghi nhận và đăng ký thẻ tháng mới cho các phương tiện.
+  - Kiểm tra và ngăn chặn đăng ký trùng lặp mã thẻ hoặc biển số xe.
 - **Báo cáo doanh thu:**
   - Thống kê tổng số lượt xe đã ra khỏi bãi.
   - Thống kê tổng doanh thu thu được theo thời gian thực.
@@ -24,8 +27,8 @@
 ## Cấu trúc dự án
 Dự án được tổ chức theo kiến trúc phân lớp, tách biệt rõ ràng giữa giao diện, xử lý logic và dữ liệu:
 - `com.parking.models`: Chứa các lớp đại diện cho thực thể trong hệ thống như `User`, `VehicleType`, `ParkingSlot`, `ParkingTicket`, `SubscriptionCard`, `PricingPolicy`,...
-- `com.parking.view`: Chứa các thành phần giao diện người dùng (GUI) như `LoginFrame`, `MainFrame`, `CheckInPanel`, `CheckOutPanel`, `ReportPanel`.
-- `com.parking.controller`: Chứa các dịch vụ xử lý nghiệp vụ logic như `CheckInService`, `CheckOutService`.
+- `com.parking.view`: Chứa các thành phần giao diện người dùng (GUI) như `LoginFrame`, `MainFrame`, `CheckInPanel`, `CheckOutPanel`, `SubscriptionPanel`, `ReportPanel`.
+- `com.parking.controller`: Chứa các dịch vụ xử lý nghiệp vụ logic như `CheckInService`, `CheckOutService`, `SubscriptionService`.
 - `com.parking.repository`: Chứa các lớp chịu trách nhiệm lưu trữ và truy xuất xuất dữ liệu (ví dụ: `DataStorage`, `FileHandler`).
 
 ## Yêu cầu hệ thống
