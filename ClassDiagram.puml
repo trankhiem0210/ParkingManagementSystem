@@ -56,6 +56,9 @@ package "com.parking.models" {
         - LocalDateTime exitTime
         - double totalFee
         - boolean isCheckOut
+        + ParkingTicket(ticketId: String, plateNumber: String, type: VehicleType, entryTime: LocalDateTime)
+        + getTicketId(): String
+        + setCheckOut(exitTime: LocalDateTime, fee: double)
     }
 
     class SubscriptionCard {
@@ -89,6 +92,8 @@ package "com.parking.repository" {
     }
 
     class FileHandler {
+        + {static} saveToFile(storage: DataStorage, filePath: String): boolean
+        + {static} loadFromFile(filePath: String): DataStorage
     }
 }
 
@@ -107,6 +112,21 @@ package "com.parking.controller" {
     class SubscriptionService {
         - DataStorage storage
         + registerSubscriptionCard(newCard): String
+    }
+
+    class AuthService {
+        - DataStorage storage
+        + login(username: String, password: String): User
+    }
+
+    class ReportService {
+        - DataStorage storage
+        + generateRevenueReport(startDate: LocalDate, endDate: LocalDate): double
+    }
+
+    class SearchService {
+        - DataStorage storage
+        + searchVehicle(plateNumber: String): ParkingTicket
     }
 }
 
@@ -129,4 +149,7 @@ CheckInService --> DataStorage : uses >
 CheckOutService --> DataStorage : uses >
 CheckOutService --> PricingPolicy : uses >
 SubscriptionService --> DataStorage : uses >
+AuthService --> DataStorage : uses >
+ReportService --> DataStorage : uses >
+SearchService --> DataStorage : uses >
 @enduml
