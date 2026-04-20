@@ -1,0 +1,47 @@
+@startuml SubscriptionProcess
+title Sequence Diagram - Register Subscription (Đăng Ký Vé Tháng)
+
+actor Staff as "Nhân viên"
+participant SubscriptionPanel as "UI: SubscriptionPanel"
+participant SubscriptionService as "Service: SubscriptionService"
+participant DataStorage as "Storage: DataStorage"
+participant SubscriptionCard as "Card: SubscriptionCard"
+
+Staff -> SubscriptionPanel: Nhập thông tin (Biển số, Tên chủ xe, Loại xe, Số tháng) & Bấm "Đăng ký thẻ"
+activate SubscriptionPanel
+
+SubscriptionPanel -> SubscriptionService: registerSubscriptionCard(plateNumber, ownerName, vehicleType, months)
+activate SubscriptionService
+
+SubscriptionService -> SubscriptionService: Kiểm tra dữ liệu đầu vào (hợp lệ)
+
+SubscriptionService -> DataStorage: getListCards()
+activate DataStorage
+DataStorage --> SubscriptionService: List<SubscriptionCard>
+deactivate DataStorage
+
+SubscriptionService -> SubscriptionService: Kiểm tra trùng biển số & thẻ còn hạn (hasActiveCard)
+
+alt hasActiveCard == true
+    SubscriptionService --> SubscriptionPanel: "Biển số xe này đã có thẻ tháng đang còn hiệu lực!"
+else Không có thẻ trùng còn hạn
+    SubscriptionService -> SubscriptionService: Tạo newCardId & expiryDate
+    
+    SubscriptionService -> SubscriptionCard: new SubscriptionCard(newCardId, plateNumber, ownerName, vehicleType, expiryDate)
+    activate SubscriptionCard
+    SubscriptionCard --> SubscriptionService: newCard
+    deactivate SubscriptionCard
+    
+    SubscriptionService -> DataStorage: getListCards().add(newCard)
+    activate DataStorage
+    DataStorage --> SubscriptionService: Lưu thành công
+    deactivate DataStorage
+    
+    SubscriptionService --> SubscriptionPanel: "Đăng ký thành công! Mã thẻ: ..."
+end
+
+deactivate SubscriptionService
+
+SubscriptionPanel --> Staff: Hiển thị thông báo kết quả
+deactivate SubscriptionPanel
+@enduml
