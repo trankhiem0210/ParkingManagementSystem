@@ -1,0 +1,42 @@
+@startuml SearchProcess
+title Sequence Diagram - Search Vehicle (Tra Cứu / Tìm Kiếm Xe)
+
+actor Staff as "Nhân viên"
+participant SearchPanel as "UI: SearchPanel"
+participant SearchService as "Service: SearchService"
+participant DataStorage as "Storage: DataStorage"
+
+Staff -> SearchPanel: Nhập từ khóa (Biển số / Mã vé / Mã thẻ) & Bấm "Tìm kiếm"
+activate SearchPanel
+
+SearchPanel -> SearchService: searchVehicle(keyword)
+activate SearchService
+
+SearchService -> DataStorage: getListCards()
+activate DataStorage
+DataStorage --> SearchService: List<SubscriptionCard>
+deactivate DataStorage
+SearchService -> SearchService: Quy đổi từ mã thẻ sang biển số xe (nếu có)
+
+SearchService -> DataStorage: getListTickets()
+activate DataStorage
+DataStorage --> SearchService: List<ParkingTicket> (Xe đang đỗ)
+deactivate DataStorage
+SearchService -> SearchService: Duyệt danh sách, tìm kiếm xe khớp từ khóa
+
+SearchService -> DataStorage: getListHistoryTickets()
+activate DataStorage
+DataStorage --> SearchService: List<ParkingTicket> (Xe đã rời bãi)
+deactivate DataStorage
+SearchService -> SearchService: Duyệt danh sách, tìm kiếm xe khớp từ khóa
+
+alt Không tìm thấy xe nào
+    SearchService --> SearchPanel: "Không tìm thấy thông tin xe nào phù hợp..."
+else Tìm thấy
+    SearchService --> SearchPanel: Chuỗi kết quả (resultBuilder) chi tiết thời gian, phí...
+end
+
+deactivate SearchService
+SearchPanel --> Staff: Hiển thị kết quả tra cứu lên màn hình
+deactivate SearchPanel
+@enduml

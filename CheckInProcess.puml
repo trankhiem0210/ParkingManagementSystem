@@ -1,0 +1,115 @@
+@startuml CheckInProcess
+title Sequence Diagram - Check In Process (Nhận Xe Vào Bãi)
+
+actor Staff as "Nhân viên"
+participant CheckInPanel as "UI: CheckInPanel"
+participant CheckInService as "Service: CheckInService"
+participant DataStorage as "Storage: DataStorage"
+participant SubscriptionCard as "Card: SubscriptionCard"
+participant ParkingSlot as "Slot: ParkingSlot"
+participant ParkingTicket as "Ticket: ParkingTicket"
+
+Staff -> CheckInPanel: Nhập thông tin (Biển số, Loại xe, Mã thẻ) & bấm "Check In"
+activate CheckInPanel
+
+CheckInPanel -> CheckInService: performCheckIn(plate, type, idCard)
+activate CheckInService
+
+alt idCard != null (Có sử dụng thẻ tháng)
+    CheckInService -> DataStorage: getListCards()
+    activate DataStorage
+    DataStorage --> CheckInService: List<SubscriptionCard>
+    deactivate DataStorage
+    
+    CheckInService -> SubscriptionCard: filter() & kiểm tra hợp lệ
+    activate SubscriptionCard
+    SubscriptionCard --> CheckInService: result
+    deactivate SubscriptionCard
+    
+    alt Thẻ không hợp lệ
+        CheckInService --> CheckInPanel: "The thang khong hop le"
+    end
+end
+
+CheckInService -> DataStorage: getListSlots()
+activate DataStorage
+DataStorage --> CheckInService: List<ParkingSlot>
+deactivate DataStorage
+
+CheckInService -> ParkingSlot: Tìm vị trí trống (availableSlot) theo loại xe
+activate ParkingSlot
+ParkingSlot --> CheckInService: availableSlot
+deactivate ParkingSlot
+
+alt availableSlot == null (Hết chỗ)
+    CheckInService --> CheckInPanel: "Het cho do cho loai xe..."
+else Có chỗ trống
+    CheckInService -> ParkingSlot: setOccupied(true)
+    
+    CheckInService -> ParkingTicket: new ParkingTicket(ticketId, plate, type, time, ...)
+    activate ParkingTicket
+    ParkingTicket --> CheckInService: ticket
+    deactivate ParkingTicket
+    
+    CheckInService -> DataStorage: getListTickets()
+    activate DataStorage
+    DataStorage --> CheckInService: List<ParkingTicket>
+    deactivate DataStorage
+    
+    CheckInService -> DataStorage: add(ticket)
+    
+    CheckInService --> CheckInPanel: "Check-in thanh cong..."
+end
+
+deactivate CheckInService
+
+CheckInPanel --> Staff: Hiển thị thông báo
+deactivate CheckInPanel
+
+@enduml
+
+@startuml CheckOutProcess
+title Sequence Diagram - Check Out Process (Thanh Toán & Cho Xe Ra)
+
+actor Staff as "Nhân viên"
+participant CheckOutPanel as "UI: CheckOutPanel"
+participant CheckOutService as "Service: CheckOutService"
+participant DataStorage as "Storage: DataStorage"
+participant ParkingSlot as "Slot: ParkingSlot"
+participant ParkingTicket as "Ticket: ParkingTicket"
+participant PricingPolicy as "Policy: PricingPolicy"
+
+Staff -> CheckOutPanel: Nhập Slot ID, Ticket ID & bấm "Check Out"
+activate CheckOutPanel
+
+CheckOutPanel -> CheckOutService: performCheckOut(slotId, ticketId)
+activate CheckOutService
+
+CheckOutService -> DataStorage: getListSlots()
+CheckOutService -> ParkingSlot: Tìm Slot theo slotId
+
+alt Slot không hợp lệ hoặc đang trống
+    CheckOutService --> CheckOutPanel: "Khong tim thay vi tri do..."
+else Vị trí đỗ hợp lệ
+    CheckOutService -> DataStorage: getListTickets()
+    CheckOutService -> ParkingTicket: Tìm Ticket theo ticketId
+    
+    alt Ticket không hợp lệ
+        CheckOutService --> CheckOutPanel: "Khong tim thay ve xe..."
+    else Vé xe hợp lệ
+        CheckOutService -> DataStorage: getListCards()
+        CheckOutService -> CheckOutService: Kiểm tra thẻ tháng hợp lệ (hasValidSubscription)
+        CheckOutService -> ParkingTicket: setExitTime(now)
+        CheckOutService -> PricingPolicy: calculateFee(...)
+        CheckOutService -> ParkingTicket: setTotalFee(totalFee), setCheckOut(true)
+        CheckOutService -> DataStorage: Xóa ticket khỏi listTickets, thêm vào listHistoryTickets
+        CheckOutService -> ParkingSlot: setOccupied(false)
+        
+        CheckOutService --> CheckOutPanel: "Check-out thanh cong! Số tiền: ..."
+    end
+end
+
+deactivate CheckOutService
+CheckOutPanel --> Staff: Hiển thị thông báo & số tiền
+deactivate CheckOutPanel
+@enduml
